@@ -65,7 +65,10 @@ export default () => {
     const [submitted, setSubmitted] = useState(false);
 
     useEffect(() => {
-        if(progress === 100 && !submitted){
+        if(progress === 100 && (localStorage.getItem('submitted') ?? "false") != "true"){
+            const data = {ownHome, electricBill, homeType, roofShade, zipcode, address, firstName, lastName, email, phoneNumber, excitedType};
+            localStorage.setItem("data", JSON.stringify(data));
+            localStorage.setItem('submitted', "true");
             setSubmitted(true);
             setWholeInfomation();
         }
