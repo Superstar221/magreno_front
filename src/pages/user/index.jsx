@@ -96,13 +96,18 @@ export default () => {
             image: Solar6
         }
     ]
-useEffect(() => {
-    if(progress === 100 && !submitted){
-        setSubmitted(true);
-        setWholeInfomation();
+    useEffect(() => {
+        if(progress === 100 && !submitted){
+            setSubmitted(true);
+            setWholeInfomation();
+        }
+    }, [progress])
 
-    }
-}, [progress])
+    useEffect(() => {
+        if(localStorage.getItem('progress') != undefined){
+            setProgress(JSON.parse(localStorage.getItem('progress')));
+        }
+    }, [])
     const setWholeInfomation = () => {
         const requestData = {ownHome, electricBill, homeType, roofShade, zipcode, address, firstName, lastName, email, phoneNumber, excitedType};
         axios.post(API_BASE + "/client/addclient", requestData)
@@ -114,6 +119,11 @@ useEffect(() => {
             .catch((err) => {
                 console.log(JSON.parse(err.request.response).message);
             })
+    }
+
+    const saveProgress = (value) => {
+        setProgress(value);
+        localStorage.setItem(value);
     }
     return(
         <div className="flex flex-col items-center w-full">
@@ -128,13 +138,13 @@ useEffect(() => {
                         <div className="flex justify-between w-full flex-wrap gap-[15px]">
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[48%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 hover:bg-green-50" onClick={() => {
                                 setOwnHome(true);
-                                setProgress(14);
+                                saveProgress(14);
                             }}>
                                 <img src={YesImage} alt="yesimage" className="m-auto"/>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[48%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 hover:bg-green-50" onClick={() => {
                                 setOwnHome(false);
-                                setProgress(14);
+                                saveProgress(14);
                             }}>
                                 <img src={NoImage} alt="no" className="m-auto"/>
                             </div>
@@ -148,25 +158,25 @@ useEffect(() => {
                         <div className="flex justify-between w-full px-[10px] flex-wrap gap-[15px]">
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setElectricBill("$0-$75");
-                                setProgress(21);
+                                saveProgress(21);
                             }}>
                                 <img src={BillPrice1} alt="$0-$75" className="m-auto"/>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setElectricBill("$101-$250");
-                                setProgress(21);
+                                saveProgress(21);
                             }}>
                                 <img src={BillPrice2} alt="$101-$250" className="m-auto"/>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setElectricBill("$251-$400");
-                                setProgress(21);
+                                saveProgress(21);
                             }}>
                                 <img src={BillPrice3} alt="$251-$400" className="m-auto"/>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setElectricBill("$401+");
-                                setProgress(21);
+                                saveProgress(21);
                             }}>
                                 <img src={BillPrice4} alt="$401+" className="m-auto"/>
                             </div>
@@ -180,21 +190,21 @@ useEffect(() => {
                         <div className="flex justify-between w-full px-[10px] flex-wrap gap-[15px]">
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[30%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setHomeType("singlefamily");
-                                setProgress(28);
+                                saveProgress(28);
                             }}>
                                 <img src={HomeType1} alt="singlefamily" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Single Family</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[30%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setHomeType("apartment");
-                                setProgress(28);
+                                saveProgress(28);
                             }}>
                                 <img src={HomeType2} alt="apartment" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Apartment</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[30%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setHomeType("other");
-                                setProgress(28);
+                                saveProgress(28);
                             }}>
                                 <img src={HomeType3} alt="other" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Other</span>
@@ -209,28 +219,28 @@ useEffect(() => {
                         <div className="flex justify-between w-full px-[10px] flex-wrap gap-[15px]">
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setRoofShade("fullsun");
-                                setProgress(36);
+                                saveProgress(36);
                             }}>
                                 <img src={RoofType1} alt="fullsun" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Full Sun</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setRoofShade("partialsun");
-                                setProgress(36);
+                                saveProgress(36);
                             }}>
                                 <img src={RoofType2} alt="partialsun" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Partial Sun</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setRoofShade("alotofshade");
-                                setProgress(36);
+                                saveProgress(36);
                             }}>
                                 <img src={RoofType3} alt="alotofshade" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">A Lot Of Shade</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setRoofShade("notsure");
-                                setProgress(36);
+                                saveProgress(36);
                             }}>
                                 <img src={RoofType4} alt="notsure" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Not Sure</span>
@@ -252,7 +262,7 @@ useEffect(() => {
                             placeholder="Zip Code"
                         />
                         <div className="text-[#777] text-[10px] cursor-pointer font-[Poppins] mt-[10px] md:mt-[0px]">Examples: 90210</div>
-                        <button className={"mt-[20px] bg-[#00AC2C] font-[800] text-[16px] text-[#FFFFFF] py-[10px] px-[30px] rounded-[10px] shadow-[4px_5px_0px_rgb(0,0,0,0.16)] hover:border-solid hover:border-[1px] hover:border-[#FF0000] "+ ((zipcode.length === 5 && parseInt(zipcode) == zipcode) ? 'cursor-pointer' : 'cursor-not-allowed opacity-50')}  disabled={!(zipcode.length ===5 && parseInt(zipcode) == zipcode)} onClick={()=>{setProgress(57);}}>NEXT</button>
+                        <button className={"mt-[20px] bg-[#00AC2C] font-[800] text-[16px] text-[#FFFFFF] py-[10px] px-[30px] rounded-[10px] shadow-[4px_5px_0px_rgb(0,0,0,0.16)] hover:border-solid hover:border-[1px] hover:border-[#FF0000] "+ ((zipcode.length === 5 && parseInt(zipcode) == zipcode) ? 'cursor-pointer' : 'cursor-not-allowed opacity-50')}  disabled={!(zipcode.length ===5 && parseInt(zipcode) == zipcode)} onClick={()=>{saveProgress(57);}}>NEXT</button>
                     </div>
                }
                 {
@@ -268,7 +278,7 @@ useEffect(() => {
                             onChange={(e)=>{setAddress(e.target.value)}}
                             placeholder="Your Address"
                         />
-                        <button className={"mt-[20px] bg-[#00AC2C] font-[800] text-[16px] text-[#FFFFFF] py-[10px] px-[30px] rounded-[10px] shadow-[4px_5px_0px_rgb(0,0,0,0.16)] hover:border-solid hover:border-[1px] hover:border-[#FF0000] "+ (address.length ? 'cursor-pointer' : 'cursor-not-allowed opacity-50')} disabled={!address.length} onClick={()=>{setProgress(64);}}>NEXT</button>
+                        <button className={"mt-[20px] bg-[#00AC2C] font-[800] text-[16px] text-[#FFFFFF] py-[10px] px-[30px] rounded-[10px] shadow-[4px_5px_0px_rgb(0,0,0,0.16)] hover:border-solid hover:border-[1px] hover:border-[#FF0000] "+ (address.length ? 'cursor-pointer' : 'cursor-not-allowed opacity-50')} disabled={!address.length} onClick={()=>{saveProgress(64);}}>NEXT</button>
                     </div>
                }
                 {
@@ -291,7 +301,7 @@ useEffect(() => {
                             onChange={(e)=>{setLastName(e.target.value)}}
                             placeholder="Last Name"
                         />
-                        <button className={"mt-[20px] bg-[#00AC2C] font-[800] text-[16px] text-[#FFFFFF] py-[10px] px-[30px] rounded-[10px] shadow-[4px_5px_0px_rgb(0,0,0,0.16)] hover:border-solid hover:border-[1px] hover:border-[#FF0000] "+ ((firstName && lastName) ? 'cursor-pointer' : 'cursor-not-allowed opacity-50 ')} disabled={!(firstName && lastName)} onClick={()=>{setProgress(71);}}>NEXT</button>
+                        <button className={"mt-[20px] bg-[#00AC2C] font-[800] text-[16px] text-[#FFFFFF] py-[10px] px-[30px] rounded-[10px] shadow-[4px_5px_0px_rgb(0,0,0,0.16)] hover:border-solid hover:border-[1px] hover:border-[#FF0000] "+ ((firstName && lastName) ? 'cursor-pointer' : 'cursor-not-allowed opacity-50 ')} disabled={!(firstName && lastName)} onClick={()=>{saveProgress(71);}}>NEXT</button>
                         <img src={Norton} alt="norton" className="w-[100px] h-[54px] m-auto mt-[15px]"></img>
                     </div>
                }
@@ -308,7 +318,7 @@ useEffect(() => {
                             onChange={(e)=>{setEmail(e.target.value)}}
                             placeholder="Enter Email Address"
                         />
-                        <button className={"mt-[20px] bg-[#00AC2C] font-[800] text-[16px] text-[#FFFFFF] py-[10px] px-[30px] rounded-[10px] shadow-[4px_5px_0px_rgb(0,0,0,0.16)] hover:border-solid hover:border-[1px] hover:border-[#FF0000] "+ (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? 'cursor-pointer' : 'cursor-not-allowed opacity-50')} disabled={!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)} onClick={()=>{setProgress(79);}}>NEXT</button>
+                        <button className={"mt-[20px] bg-[#00AC2C] font-[800] text-[16px] text-[#FFFFFF] py-[10px] px-[30px] rounded-[10px] shadow-[4px_5px_0px_rgb(0,0,0,0.16)] hover:border-solid hover:border-[1px] hover:border-[#FF0000] "+ (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? 'cursor-pointer' : 'cursor-not-allowed opacity-50')} disabled={!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)} onClick={()=>{saveProgress(79);}}>NEXT</button>
                     </div>
                }
                {
@@ -330,7 +340,7 @@ useEffect(() => {
                         onChange={(e)=>{setPhoneNumber(e)}}
                         placeholder="Phone Number"
                         />
-                        <button className={"mt-[20px] bg-[#00AC2C] font-[800] text-[16px] text-[#FFFFFF] py-[10px] px-[30px] rounded-[10px] shadow-[4px_5px_0px_rgb(0,0,0,0.16)] hover:border-solid hover:border-[1px] hover:border-[#FF0000] "+ (/^\+?\d{1,3}[-.\s]?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/.test(phoneNumber) ? 'cursor-pointer' : 'cursor-not-allowed opacity-50')} disabled={!/^\+?\d{1,3}[-.\s]?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/.test(phoneNumber) } onClick={()=>{setProgress(93);}}>SUBMIT</button>
+                        <button className={"mt-[20px] bg-[#00AC2C] font-[800] text-[16px] text-[#FFFFFF] py-[10px] px-[30px] rounded-[10px] shadow-[4px_5px_0px_rgb(0,0,0,0.16)] hover:border-solid hover:border-[1px] hover:border-[#FF0000] "+ (/^\+?\d{1,3}[-.\s]?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/.test(phoneNumber) ? 'cursor-pointer' : 'cursor-not-allowed opacity-50')} disabled={!/^\+?\d{1,3}[-.\s]?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/.test(phoneNumber) } onClick={()=>{saveProgress(93);}}>SUBMIT</button>
                         <div className="mt-[50px]">
                             <em className="text-[#999999] text-[12px]">
                                 <span>By clicking the “SUBMIT” button, you authorize US Solar Savings and up to
@@ -381,28 +391,28 @@ useEffect(() => {
                         <div className="flex justify-between w-full px-[10px] flex-wrap gap-[15px]">
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setExcitedType("reducing monthly bills");
-                                setProgress(100);
+                                saveProgress(100);
                             }}>
                                 <img src={ExcitedThing1} alt="reducing monthly bills" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Reducing Monthly Bills</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setExcitedType("saving the environment");
-                                setProgress(100);
+                                saveProgress(100);
                             }}>
                                 <img src={ExcitedThing2} alt="saving the environment" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Saving The Environment</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setExcitedType("helping the us economy");
-                                setProgress(100);
+                                saveProgress(100);
                             }}>
                                 <img src={ExcitedThing3} alt="helping the us economy" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Helping the US Economy</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setExcitedType("increasing your homes value");
-                                setProgress(100);
+                                saveProgress(100);
                             }}>
                                 <img src={ExcitedThing4} alt="increasing your homes value" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Increasing Your Homes Value</span>
