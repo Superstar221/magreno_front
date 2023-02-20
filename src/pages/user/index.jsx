@@ -1,5 +1,5 @@
 import { LinearProgress } from "@material-ui/core"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { withStyles } from '@material-ui/core/styles';
 import { API_BASE } from "../../config/constants";
 import PhoneInput from "react-phone-input-2";
@@ -69,6 +69,7 @@ export default () => {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [excitedType, setExcitedType] = useState("");
 
+    const [submitted, setSubmitted] = useState(false);
     const solarData = [
         {
             type:"Government Sponsored Solar Panels",
@@ -95,11 +96,16 @@ export default () => {
             image: Solar6
         }
     ]
+useEffect(() => {
+    if(progress === 100 && !submitted){
+        setSubmitted(true);
+        setWholeInfomation();
 
+    }
+}, [progress])
     const setWholeInfomation = () => {
-        setProgress(100);
         const requestData = {ownHome, electricBill, homeType, roofShade, zipcode, address, firstName, lastName, email, phoneNumber, excitedType};
-        axios.post(API_BASE + "/addclient", requestData)
+        axios.post(API_BASE + "/client/addclient", requestData)
             .then((result) => {
                 if(result.data.message){
                     alert("Successfully Submitted!!!")
@@ -375,28 +381,28 @@ export default () => {
                         <div className="flex justify-between w-full px-[10px] flex-wrap gap-[15px]">
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setExcitedType("reducing monthly bills");
-                                setWholeInfomation();
+                                setProgress(100);
                             }}>
                                 <img src={ExcitedThing1} alt="reducing monthly bills" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Reducing Monthly Bills</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setExcitedType("saving the environment");
-                                setWholeInfomation();
+                                setProgress(100);
                             }}>
                                 <img src={ExcitedThing2} alt="saving the environment" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Saving The Environment</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setExcitedType("helping the us economy");
-                                setWholeInfomation();
+                                setProgress(100);
                             }}>
                                 <img src={ExcitedThing3} alt="helping the us economy" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Helping the US Economy</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setExcitedType("increasing your homes value");
-                                setWholeInfomation();
+                                setProgress(100);
                             }}>
                                 <img src={ExcitedThing4} alt="increasing your homes value" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Increasing Your Homes Value</span>
