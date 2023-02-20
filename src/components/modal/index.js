@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import CloseImg from '../../assets/close.svg'
+import CloseImg from '../../assets/close.webp'
 export default function ConfirmationDialogRaw({open, setModalOpen, operatingType, selecteditem}) {
 
   const handleClose = () => {

@@ -3,36 +3,29 @@ import { useEffect, useState } from "react"
 import { withStyles } from '@material-ui/core/styles';
 import { API_BASE } from "../../config/constants";
 import PhoneInput from "react-phone-input-2";
-import SolarCard from '../../components/card/solar'
-import YesImage from '../../assets/yes.png'
-import NoImage from '../../assets/no.png'
+import YesImage from '../../assets/yes.webp'
+import NoImage from '../../assets/no.webp'
 
-import BillPrice1 from '../../assets/electricbill1.png'
-import BillPrice2 from '../../assets/electricbill2.png'
-import BillPrice3 from '../../assets/electricbill3.png'
-import BillPrice4 from '../../assets/electricbill4.png'
+import BillPrice1 from '../../assets/electricbill1.webp'
+import BillPrice2 from '../../assets/electricbill2.webp'
+import BillPrice3 from '../../assets/electricbill3.webp'
+import BillPrice4 from '../../assets/electricbill4.webp'
 
-import HomeType1 from '../../assets/hometype1.png'
-import HomeType2 from '../../assets/hometype2.png'
-import HomeType3 from '../../assets/hometype3.png'
+import HomeType1 from '../../assets/hometype1.webp'
+import HomeType2 from '../../assets/hometype2.webp'
+import HomeType3 from '../../assets/hometype3.webp'
 
-import RoofType1 from '../../assets/rooftype1.png'
-import RoofType2 from '../../assets/rooftype2.png'
-import RoofType3 from '../../assets/rooftype3.png'
-import RoofType4 from '../../assets/rooftype4.png'
-import CustomerRating from '../../assets/rating.png'
-import Norton from '../../assets/Norton.png'
-import ExcitedThing1 from '../../assets/excitedtype1.png'
-import ExcitedThing2 from '../../assets/excitedtype2.png'
-import ExcitedThing3 from '../../assets/excitedtype3.png'
-import ExcitedThing4 from '../../assets/excitedtype4.png'
+import RoofType1 from '../../assets/rooftype1.webp'
+import RoofType2 from '../../assets/rooftype2.webp'
+import RoofType3 from '../../assets/rooftype3.webp'
+import RoofType4 from '../../assets/rooftype4.webp'
+import CustomerRating from '../../assets/rating.webp'
+import Norton from '../../assets/Norton.webp'
+import ExcitedThing1 from '../../assets/excitedtype1.webp'
+import ExcitedThing2 from '../../assets/excitedtype2.webp'
+import ExcitedThing3 from '../../assets/excitedtype3.webp'
+import ExcitedThing4 from '../../assets/excitedtype4.webp'
 
-import Solar1 from '../../assets/solar1.jpg'
-import Solar2 from '../../assets/solar2.jpg'
-import Solar3 from '../../assets/solar3.jpg'
-import Solar4 from '../../assets/solar4.jpg'
-import Solar5 from '../../assets/solar5.jpg'
-import Solar6 from '../../assets/solar6.jpg'
 
 
 import 'react-phone-input-2/lib/style.css';
@@ -70,32 +63,7 @@ export default () => {
     const [excitedType, setExcitedType] = useState("");
 
     const [submitted, setSubmitted] = useState(false);
-    const solarData = [
-        {
-            type:"Government Sponsored Solar Panels",
-            image: Solar1
-        },
-        {
-            type:"Most Affordable Solar Panels",
-            image: Solar2
-        },
-        {
-            type:"Affordable Home Solar",
-            image: Solar3
-        },
-        {
-            type:"Solar Panels For Home",
-            image: Solar4
-        },
-        {
-            type:"Discound Solar Panels",
-            image: Solar5
-        },
-        {
-            type:"Solar Panel Installation",
-            image: Solar6
-        }
-    ]
+
     useEffect(() => {
         if(progress === 100 && !submitted){
             setSubmitted(true);
@@ -106,6 +74,18 @@ export default () => {
     useEffect(() => {
         if(localStorage.getItem('progress') != undefined){
             setProgress(JSON.parse(localStorage.getItem('progress')));
+            const data = JSON.parse(localStorage.getItem('data'));
+            setOwnHome(data.ownHome);
+            setElectricBill(data.electricBill);
+            setHomeType(data.homeType);
+            setRoofShade(data.roofShade);
+            setZipcode(data.zipcode);
+            setAddress(data.address);
+            setFirstName(data.firstName);
+            setLastName(data.lastName);
+            setEmail(data.email);
+            setPhoneNumber(data.phoneNumber);
+            setExcitedType(data.excitedType);
         }
     }, [])
     const setWholeInfomation = () => {
@@ -123,7 +103,9 @@ export default () => {
 
     const saveProgress = (value) => {
         setProgress(value);
-        localStorage.setItem(value);
+        const data = {ownHome, electricBill, homeType, roofShade, zipcode, address, firstName, lastName, email, phoneNumber, excitedType};
+        localStorage.setItem("data", JSON.stringify(data));
+        localStorage.setItem("progress", value);
     }
     return(
         <div className="flex flex-col items-center w-full">
@@ -444,22 +426,7 @@ export default () => {
                         </div>
                     </div>
                 }
-                {
-                    progress === 200 && 
-                    <div className="px-[10px] py-[20px] text-center">
-                        <strong className="text-center font-[700] font-[Poppins] text-[24px] ">You're one step closer to saving every month!</strong>
-                        <div className="font-[Poppins] text-[12px] text-left mt-[50px] mb-[10px]">Related Topics (Ads)</div>
-                        <div className="flex justify-between w-full px-[10px] flex-wrap gap-[15px]">
-                            {
-                                solarData.map((item, index) => {
-                                    return(
-                                        <SolarCard index={index} item={item}/>
-                                    )
-                                })
-                            }
-                        </div>
-                    </div>
-                }
+                
              </div>
         </div>
     )
