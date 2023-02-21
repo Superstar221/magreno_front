@@ -1,7 +1,7 @@
 import { LinearProgress } from "@material-ui/core"
 import { useEffect, useState } from "react"
 import { withStyles } from '@material-ui/core/styles';
-import { API_BASE } from "../../config/constants";
+import { Helmet } from 'react-helmet';
 import PhoneInput from "react-phone-input-2";
 import YesImage from '../../assets/yes.webp'
 import NoImage from '../../assets/no.webp'
@@ -51,9 +51,9 @@ const BorderLinearProgress = withStyles((theme) => ({
 export default () => {
     const [progress, setProgress] = useState(7);
     const [ownHome, setOwnHome] = useState(false);
-    const [electricBill, setElectricBill] = useState("");
+    const [electricBill, setElectricBill] = useState(0);
     const [homeType, setHomeType] = useState("");
-    const [roofShade, setRoofShade] = useState("");
+    const [roofShade, setRoofShade] = useState(0);
     const [zipcode, setZipcode] = useState("");
     const [address, setAddress] = useState("");
     const [firstName, setFirstName] = useState("");
@@ -62,6 +62,9 @@ export default () => {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [excitedType, setExcitedType] = useState("");
 
+    const [ipAddress, setIpAddress] = useState("");
+    const [city, setCity] = useState("");
+    const [state, setState] = useState("");
     const [submitted, setSubmitted] = useState(false);
 
     useEffect(() => {
@@ -90,18 +93,78 @@ export default () => {
             setPhoneNumber(data.phoneNumber);
             setExcitedType(data.excitedType);
         }
+        fetch('http://ip-api.com/json/')
+        .then(response => response.json())
+        .then(data => {
+            setCity(data.city);
+            setState(data.regionName);
+            setIpAddress(data.query);
+        });
     }, [])
     const setWholeInfomation = () => {
         const requestData = {ownHome, electricBill, homeType, roofShade, zipcode, address, firstName, lastName, email, phoneNumber, excitedType};
-        axios.post(API_BASE + "/client/addclient", requestData)
-            .then((result) => {
-                if(result.data.message){
-                    alert("Successfully Submitted!!!")
-                }
+        let request = new URLSearchParams();
+        request.append("originDomain", "solaire.affiliate.com");
+        request.append("leadBy", "mehdi");
+        request.append("offer", "Solar");
+        request.append("lp_campaign_id", "6323bacb64a7e");
+        request.append("lp_campaign_key", "NLJRF6rmy3Dd72nHM8Vb");
+        request.append("electricity_provider", "Unknown");
+        request.append("tcpa_text", "By clicking the “SUBMIT” button, you authorize our partners to call you and send you pre-recorded messages and text message at the number you entered above, using an autodialer, with offers about their products or services, even if your phone number is on any national or state “Do Not Call” list. Message and data rates may apply. Your consent here is not based on a condition of purchase.");
+        request.append("tcpa_optin", "Yes");
+        request.append("landing_page", "https://magreno.leadshook.io/survey/solar-panels-v1");
+        request.append("subid", "12");
+        request.append("url", "https://www.solarprogram2023.com/survey/solar");
+        request.append("lp_s2", "12");
+        request.append("first_name", firstName);
+        request.append("last_name", lastName);
+        request.append("phone_home",phoneNumber);
+        request.append("trusted_form_cert_id", "https://cert.trustedform.com/e6f7b66487d2f77810ca0e2bb8b2434f729be4ff");
+        request.append("homeowner", ownHome ? "own" : "rent");
+        request.append("average_monthly_electric_bill", electricBill === 1 ? "$0-$100" : (electricBill === 2 ? "$101-$150" : (electricBill === 3 ? "$151-$250" : "$250+")));
+        request.append("email_address", email);
+        request.append("address", address);
+        request.append("city", city);
+        request.append("state", state);
+        request.append("zip_code", zipcode);
+        request.append("ip_address", ipAddress);
+        request.append("credit", "");
+        request.append("roof_shade", roofShade === 1 ? "No Shade" : (roofShade === 2 ? "Partial Shade" : (roofShade === 3 ? "Full Shade" : "Not Sure")));
+        request.append("user_agent", "");
+        request.append("type_of_home", homeType);
+        request.append("average_monthly_electric", electricBill === 1 ? "$76-100" : (electricBill === 2 ? "$126-150" : (electricBill === 3 ? "$201-300" : "$401-500")));
+        request.append("homeowner_px", ownHome ? "Own" : "Rented");
+        request.append("roof_shade_px", roofShade === 1 ? "Full sun" : (roofShade === 2 ? "Partial sun" : (roofShade === 3 ? "Mostly Shade" : "Not Sure")));
+        request.append("headline", "");
+        request.append("leadid_token", "A994C180-479D-7DFE-9968-75AF0800278D");
+        request.append("jornaya_lead_id", "A994C180-479D-7DFE-9968-75AF0800278D");
+        request.append("fbclid", "");
+        request.append("event_id", "1053850_355133726_enter");
+        request.append("client_user_agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36");  
+        request.append("cid", "");
+        
+        fetch('https://bingoleads.leadspediatrack.com/post.do', {
+            method: 'POST',
+            body: request,
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                alert("Successfully Submitted!!!")
             })
-            .catch((err) => {
-                console.log(JSON.parse(err.request.response).message);
-            })
+            .catch(error => console.error(error));
+        // axios.post(API_BASE + "/client/addclient", requestData)
+        //     .then((result) => {
+        //         if(result.data.message){
+        //             alert("Successfully Submitted!!!")
+        //         }
+        //     })
+        //     .catch((err) => {
+        //         console.log(JSON.parse(err.request.response).message);
+        //     })
     }
 
     const saveProgress = (value) => {
@@ -139,28 +202,34 @@ export default () => {
                 {
                     progress === 14 && 
                     <div className="px-[10px] py-[20px] text-center">
+                         <Helmet>
+                            <script>{`window.fbq = fbq`}</script>
+                        </Helmet>
                         <strong className="text-center font-[700] font-[Poppins] text-[35px] ">How much is your monthly electric bill usually?</strong>
                         <div className="flex justify-between w-full px-[10px] flex-wrap gap-[15px]">
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
-                                setElectricBill("$0-$75");
+                                setElectricBill(1);
                                 saveProgress(21);
+                                if (typeof window.fbq === 'function') {
+                                    window.fbq('track', 'ViewContent');
+                                }
                             }}>
                                 <img src={BillPrice1} alt="$0-$75" className="m-auto"/>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
-                                setElectricBill("$101-$250");
+                                setElectricBill(2);
                                 saveProgress(21);
                             }}>
                                 <img src={BillPrice2} alt="$101-$250" className="m-auto"/>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
-                                setElectricBill("$251-$400");
+                                setElectricBill(3);
                                 saveProgress(21);
                             }}>
                                 <img src={BillPrice3} alt="$251-$400" className="m-auto"/>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
-                                setElectricBill("$401+");
+                                setElectricBill(4);
                                 saveProgress(21);
                             }}>
                                 <img src={BillPrice4} alt="$401+" className="m-auto"/>
@@ -203,28 +272,28 @@ export default () => {
                         <strong className="text-center font-[700] font-[Poppins] text-[35px] ">Is your roof shaded by trees?</strong>
                         <div className="flex justify-between w-full px-[10px] flex-wrap gap-[15px]">
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
-                                setRoofShade("fullsun");
+                                setRoofShade(1);
                                 saveProgress(36);
                             }}>
                                 <img src={RoofType1} alt="fullsun" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Full Sun</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
-                                setRoofShade("partialsun");
+                                setRoofShade(2);
                                 saveProgress(36);
                             }}>
                                 <img src={RoofType2} alt="partialsun" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Partial Sun</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
-                                setRoofShade("alotofshade");
+                                setRoofShade(3);
                                 saveProgress(36);
                             }}>
                                 <img src={RoofType3} alt="alotofshade" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">A Lot Of Shade</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
-                                setRoofShade("notsure");
+                                setRoofShade(4);
                                 saveProgress(36);
                             }}>
                                 <img src={RoofType4} alt="notsure" className="m-auto"/>
@@ -375,28 +444,28 @@ export default () => {
                         <strong className="text-center font-[700] font-[Poppins] text-[35px] ">What are you most excited for?</strong>
                         <div className="flex justify-between w-full px-[10px] flex-wrap gap-[15px]">
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
-                                setExcitedType("reducing monthly bills");
+                                setExcitedType("Bills");
                                 saveProgress(100);
                             }}>
                                 <img src={ExcitedThing1} alt="reducing monthly bills" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Reducing Monthly Bills</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
-                                setExcitedType("saving the environment");
+                                setExcitedType("Enviro");
                                 saveProgress(100);
                             }}>
                                 <img src={ExcitedThing2} alt="saving the environment" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Saving The Environment</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
-                                setExcitedType("helping the us economy");
+                                setExcitedType("Economy");
                                 saveProgress(100);
                             }}>
                                 <img src={ExcitedThing3} alt="helping the us economy" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Helping the US Economy</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
-                                setExcitedType("increasing your homes value");
+                                setExcitedType("HomeValue");
                                 saveProgress(100);
                             }}>
                                 <img src={ExcitedThing4} alt="increasing your homes value" className="m-auto"/>
