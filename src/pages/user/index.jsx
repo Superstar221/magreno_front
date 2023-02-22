@@ -2,6 +2,7 @@ import { LinearProgress } from "@material-ui/core"
 import { useEffect, useState } from "react"
 import { withStyles } from '@material-ui/core/styles';
 import { Helmet } from 'react-helmet';
+import { useLocation } from "react-router-dom";
 import PhoneInput from "react-phone-input-2";
 import YesImage from '../../assets/yes.webp'
 import NoImage from '../../assets/no.webp'
@@ -48,7 +49,7 @@ const BorderLinearProgress = withStyles((theme) => ({
       backgroundImage: 'linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent)'
     },
   }))(LinearProgress);
-export default () => {
+export default (props) => {
     const [progress, setProgress] = useState(7);
     const [ownHome, setOwnHome] = useState(false);
     const [electricBill, setElectricBill] = useState(0);
@@ -67,6 +68,8 @@ export default () => {
     const [state, setState] = useState("");
     const [submitted, setSubmitted] = useState(false);
 
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
     useEffect(() => {
         if(progress === 100 && (localStorage.getItem('submitted') ?? "false") != "true"){
             const data = {ownHome, electricBill, homeType, roofShade, zipcode, address, firstName, lastName, email, phoneNumber, excitedType};
@@ -138,8 +141,8 @@ export default () => {
         request.append("headline", "");
         request.append("leadid_token", "A994C180-479D-7DFE-9968-75AF0800278D");
         request.append("jornaya_lead_id", "A994C180-479D-7DFE-9968-75AF0800278D");
-        request.append("fbclid", "");
-        request.append("event_id", "1053850_355133726_enter");
+        request.append("fbclid", searchParams.get('fbclid'));
+        request.append("event_id", `${Math.floor(Math.random() * 100000) +1000000}_${Math.floor(Math.random() * 900000000) + 100000000}_enter`);
         request.append("client_user_agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36");  
         request.append("cid", "");
         
@@ -243,21 +246,21 @@ export default () => {
                         <strong className="text-center font-[700] font-[Poppins] text-[35px] ">What type of home do you live in?</strong>
                         <div className="flex justify-between w-full px-[10px] flex-wrap gap-[15px]">
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[30%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
-                                setHomeType("singlefamily");
+                                setHomeType("Single Family Home");
                                 saveProgress(28);
                             }}>
                                 <img src={HomeType1} alt="singlefamily" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Single Family</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[30%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
-                                setHomeType("apartment");
+                                setHomeType("Apartment");
                                 saveProgress(28);
                             }}>
                                 <img src={HomeType2} alt="apartment" className="m-auto"/>
                                 <span className="text-[#2b1a3e] text-[16px] font-[Poppins]">Apartment</span>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[30%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
-                                setHomeType("other");
+                                setHomeType("Other");
                                 saveProgress(28);
                             }}>
                                 <img src={HomeType3} alt="other" className="m-auto"/>
