@@ -144,7 +144,7 @@ export default (props) => {
         request.append("fbclid", searchParams.get('fbclid'));
         request.append("event_id", `${Math.floor(Math.random() * 100000) +1000000}_${Math.floor(Math.random() * 900000000) + 100000000}_enter`);
         request.append("client_user_agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36");  
-        request.append("cid", "");
+        request.append("cid", searchParams.get('cid'));
         
         fetch('https://bingoleads.leadspediatrack.com/post.do', {
             method: 'POST',
@@ -178,6 +178,9 @@ export default (props) => {
     }
     return(
         <div className="flex flex-col items-center w-full">
+             <Helmet>
+                <script>{`window.fbq = fbq`}</script>
+             </Helmet>
              <BorderLinearProgress variant="determinate" value={progress >= 100 ? 100 : progress} />
              <div className="w-full flex flex-col justify-center bg-white border-solid border-[2px] rounded-[10px] border-[#DCDCDC] shadow-sm pt-[8px] pb-[16px] px-[8px] mt-[10px]">
                 {
@@ -205,9 +208,7 @@ export default (props) => {
                 {
                     progress === 14 && 
                     <div className="px-[10px] py-[20px] text-center">
-                         <Helmet>
-                            <script>{`window.fbq = fbq`}</script>
-                        </Helmet>
+
                         <strong className="text-center font-[700] font-[Poppins] text-[35px] ">How much is your monthly electric bill usually?</strong>
                         <div className="flex justify-between w-full px-[10px] flex-wrap gap-[15px]">
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
@@ -222,18 +223,27 @@ export default (props) => {
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setElectricBill(2);
                                 saveProgress(21);
+                                if (typeof window.fbq === 'function') {
+                                    window.fbq('track', 'ViewContent');
+                                }
                             }}>
                                 <img src={BillPrice2} alt="$101-$250" className="m-auto"/>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setElectricBill(3);
                                 saveProgress(21);
+                                if (typeof window.fbq === 'function') {
+                                    window.fbq('track', 'ViewContent');
+                                }
                             }}>
                                 <img src={BillPrice3} alt="$251-$400" className="m-auto"/>
                             </div>
                             <div className="text-center py-[9px] px-[16px] border-solid border-[1px] border-[#cecece] w-full md:w-[23%] rounded-[5px] cursor-pointer hover:border-[#00ae13] hover:shadow-lg hover:border-opacity-50 " onClick={() => {
                                 setElectricBill(4);
                                 saveProgress(21);
+                                if (typeof window.fbq === 'function') {
+                                    window.fbq('track', 'ViewContent');
+                                }
                             }}>
                                 <img src={BillPrice4} alt="$401+" className="m-auto"/>
                             </div>
@@ -397,7 +407,12 @@ export default (props) => {
                         onChange={(e)=>{setPhoneNumber(e)}}
                         placeholder="Phone Number"
                         />
-                        <button className={"mt-[20px] bg-[#00AC2C] font-[800] text-[16px] text-[#FFFFFF] py-[10px] px-[30px] rounded-[10px] shadow-[4px_5px_0px_rgb(0,0,0,0.16)] hover:border-solid hover:border-[1px] hover:border-[#FF0000] "+ (/^\+?\d{1,3}[-.\s]?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/.test(phoneNumber) ? 'cursor-pointer' : 'cursor-not-allowed opacity-50')} disabled={!/^\+?\d{1,3}[-.\s]?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/.test(phoneNumber) } onClick={()=>{saveProgress(93);}}>SUBMIT</button>
+                        <button className={"mt-[20px] bg-[#00AC2C] font-[800] text-[16px] text-[#FFFFFF] py-[10px] px-[30px] rounded-[10px] shadow-[4px_5px_0px_rgb(0,0,0,0.16)] hover:border-solid hover:border-[1px] hover:border-[#FF0000] "+ (/^\+?\d{1,3}[-.\s]?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/.test(phoneNumber) ? 'cursor-pointer' : 'cursor-not-allowed opacity-50')} disabled={!/^\+?\d{1,3}[-.\s]?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/.test(phoneNumber) } onClick={()=>{
+                            saveProgress(93);
+                            if (typeof window.fbq === 'function') {
+                                window.fbq('track', 'Lead', {}, {eventID: '{eventid_fb}'});
+                            }
+                        }}>SUBMIT</button>
                         <div className="mt-[50px]">
                             <em className="text-[#999999] text-[12px]">
                                 <span>By clicking the “SUBMIT” button, you authorize US Solar Savings and up to
