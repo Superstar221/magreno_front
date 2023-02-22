@@ -499,6 +499,10 @@ export default (props) => {
                                 You're moments away from a complete savings & cost breakdown. When our professionals call, make sure to write down their quotes so you can make sure you have all the answers.
                                 </div>
                         </div>
+                        <h2 className="font-[Poppins] underline hover:text-blue-500 cursor-pointer text-[25px]" onClick={() => {
+                            localStorage.clear();
+                            window.location.reload();
+                        }}>First Page</h2>
                     </div>
                 }
                 
