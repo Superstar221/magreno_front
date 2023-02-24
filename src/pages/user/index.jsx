@@ -104,6 +104,14 @@ export default (props) => {
             setIpAddress(data.query);
         });
     }, [])
+    const formatPhoneNumber = (phoneNumberString) => {
+        const cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+        const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+        if (match) {
+          return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+        }
+        return null;
+      }
     const setWholeInfomation = () => {
         const requestData = {ownHome, electricBill, homeType, roofShade, zipcode, address, firstName, lastName, email, phoneNumber, excitedType};
         let request = new URLSearchParams();
@@ -121,7 +129,7 @@ export default (props) => {
         request.append("lp_s2", "12");
         request.append("first_name", firstName);
         request.append("last_name", lastName);
-        request.append("phone_home",phoneNumber);
+        request.append("phone_home",formatPhoneNumber(phoneNumber.slice(1)));
         request.append("trusted_form_cert_id", "https://cert.trustedform.com/e6f7b66487d2f77810ca0e2bb8b2434f729be4ff");
         request.append("homeowner", ownHome ? "own" : "rent");
         request.append("average_monthly_electric_bill", electricBill === 1 ? "$0-$100" : (electricBill === 2 ? "$101-$150" : (electricBill === 3 ? "$151-$250" : "$250+")));
