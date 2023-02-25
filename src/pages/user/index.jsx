@@ -64,8 +64,6 @@ export default (props) => {
     const [excitedType, setExcitedType] = useState("");
 
     const [ipAddress, setIpAddress] = useState("");
-    const [city, setCity] = useState("");
-    const [state, setState] = useState("");
     const [submitted, setSubmitted] = useState(false);
 
     const location = useLocation();
@@ -96,12 +94,10 @@ export default (props) => {
             setPhoneNumber(data.phoneNumber);
             setExcitedType(data.excitedType);
         }
-        fetch('http://ip-api.com/json/')
+        fetch('https://api.ipify.org/?format=json')
         .then(response => response.json())
         .then(data => {
-            setCity(data.city);
-            setState(data.regionName);
-            setIpAddress(data.query);
+            setIpAddress(data.ip);
         });
     }, [])
     const formatPhoneNumber = (phoneNumberString) => {
@@ -135,8 +131,8 @@ export default (props) => {
         request.append("average_monthly_electric_bill", electricBill === 1 ? "$0-$100" : (electricBill === 2 ? "$101-$150" : (electricBill === 3 ? "$151-$250" : "$250+")));
         request.append("email_address", email);
         request.append("address", address);
-        request.append("city", city);
-        request.append("state", state);
+        request.append("city", "");
+        request.append("state", "");
         request.append("zip_code", zipcode);
         request.append("ip_address", ipAddress);
         request.append("credit", "");
