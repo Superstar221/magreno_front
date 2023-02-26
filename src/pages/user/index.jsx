@@ -126,7 +126,7 @@ export default (props) => {
         request.append("first_name", firstName);
         request.append("last_name", lastName);
         request.append("phone_home",formatPhoneNumber(phoneNumber.slice(1)));
-        request.append("trusted_form_cert_id", "https://cert.trustedform.com/e6f7b66487d2f77810ca0e2bb8b2434f729be4ff");
+        request.append("trusted_form_cert_id", `https://cert.trustedform.com/${window.trustedForm.id}`);
         request.append("homeowner", ownHome ? "own" : "rent");
         request.append("average_monthly_electric_bill", electricBill === 1 ? "$0-$100" : (electricBill === 2 ? "$101-$150" : (electricBill === 3 ? "$151-$250" : "$250+")));
         request.append("email_address", email);
@@ -143,11 +143,11 @@ export default (props) => {
         request.append("homeowner_px", ownHome ? "Own" : "Rented");
         request.append("roof_shade_px", roofShade === 1 ? "Full sun" : (roofShade === 2 ? "Partial sun" : (roofShade === 3 ? "Mostly Shade" : "Not Sure")));
         request.append("headline", "");
-        request.append("leadid_token", "A994C180-479D-7DFE-9968-75AF0800278D");
-        request.append("jornaya_lead_id", "A994C180-479D-7DFE-9968-75AF0800278D");
+        request.append("leadid_token", window.LeadiD.token);
+        request.append("jornaya_lead_id", window.LeadiD.token);
         request.append("fbclid", searchParams.get('fbclid'));
         request.append("event_id", `${Math.floor(Math.random() * 100000) +1000000}_${Math.floor(Math.random() * 900000000) + 100000000}_enter`);
-        request.append("client_user_agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36");  
+        request.append("client_user_agent", navigator.userAgent);  
         request.append("cid", searchParams.get('cid'));
         
         fetch('https://bingoleads.leadspediatrack.com/post.do', {
